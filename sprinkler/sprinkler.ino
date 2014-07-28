@@ -692,8 +692,7 @@ void loop()
     }
   }//if serial available
 
-  /* COMMENTED OUT BECAUSE WE ARE CURRENTLY NOT USING ZONE INPUTS */
-  /*  // Check if zone pin is set
+  // Check if zone pin is set
   for (int zone = 0; zone < NUMBER_OF_ZONES; zone++)
   {
     if (digitalRead(ZONE_INPUT_PORTS[zone]) > 0)
@@ -703,7 +702,7 @@ void loop()
       runZone();
       setZone(old_zone);
     }
-  }*/
+  }
 } // end of loop()
 
 /*************************************

@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import sys, os
 from datetime import datetime
 from cron import Scheduler
@@ -13,50 +11,49 @@ FILENAME = 'schedule.txt'
 def current_time():
 	return str(datetime.now())
 
-def file_empty(path):
-    return os.stat(path).st_size==0
-
 def delete_crontab():
 	try:
 		os.remove(PATH_CRON)
 	except OSError as e:
-		pass	
+		pass
 
+def get_args_length():
+	return len(sys.argv)
 
-def readtxt(filename):
-	list=[]
+def print_jobs():
+	s = Scheduler()
+	print(s.render())		
 
-	try:
-		f = open(filename, 'r')
-
-	except IOError as e:
-		exc = str(type(e))
-		print( exc + " @ " + current_time() + ">> - missing schedule.txt file")
-		sys.exit(1)
-
-	if file_empty(FILENAME):
-		print("Removing all jobs in scheduler")
-		delete_crontab()
-		sys.exit(1)
-
+def get_job():
+	if get_args_length() == 7:       			
+		return {'zone':sys.argv[2], 'month':sys.argv[3], 'day':sys.argv[4], 'hour':sys.argv[5], 'minute':sys.argv[6]}
+			
 	else:
+		print("missing argument - ZONE MONTH DAY HOUR MINUTE")
+		sys.exit(1)
 
-		for line in f:
-			line = line.split()
-			list.append({'zone':line[0], 'month':line[1], 'day':line[2], 'hour':line[3], 'minute':line[4]})
-		return list
+def commit_job():
 
-		
-if __name__=='__main__':
-	
-	delete_crontab()
-	jobs = readtxt(FILENAME)
-
+	job = get_job()
 	s = Scheduler() 
-	for job in jobs:
-		s.set_command(PATH_PYTHON, PATH_SCRIPT, PATH_LOG, job['zone'])
-		s.set_job(job['day'], job['hour'], job['minute'], job['month'])
+	s.set_command(PATH_PYTHON, PATH_SCRIPT, PATH_LOG, job['zone'])
+	s.set_job(job['day'], job['hour'], job['minute'], job['month'])
+	print_jobs()
+	
+if __name__ == "__main__":
 
-	print(s.render())
+	command = sys.argv[1]
+	if command == 'set':
+		commit_job()
+	elif command == 'delete':
+		print("Deleting all jobs")
+		delete_crontab()
+	elif command == 'print':
+		print_jobs()
+
+
+
+
+
 
 
