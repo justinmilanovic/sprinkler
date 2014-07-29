@@ -22,5 +22,29 @@ class Scheduler(CronTab):
 		self._job.minute.on(minute)
 		super(Scheduler, self).write()
 
+        def print_jobs(self):
+                
+                jobs = self.render()
+                list=[]
+                string_=''
+                
+                for job in jobs:
+                      s = ''  
+                      if not job == '\n':
+                            string_ += job
+                      else:
+                            list.append(string_)
+                            string_=''
+                            
+                frmt_list=[]
+                for inx in list:
+                       inx = inx.split()
+                       
+                       if not (len(inx)) == 0:
+                               string_ = "Zone " + inx[7] + " Every " + inx[3] + " on " + inx[4] + " at " + inx[1] + ":" + inx[0]
+                               frmt_list.append(string_)
 
+                return frmt_list
+
+                
 

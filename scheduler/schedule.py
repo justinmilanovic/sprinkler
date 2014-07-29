@@ -11,24 +11,33 @@ LOGFILE = 'log.txt'
 def current_time():
 	return str(datetime.now())
 
-def delete_crontab():
+def delete_file(filename):
 	try:
-		os.remove(PATH_CRON)
+		os.remove(filename)
 	except OSError as e:
-		pass
+                print("File not found")
+                print("-"*40)
+		sys.exit(1)
 
 def get_args_length():
 	return len(sys.argv)
 
 def print_jobs():
-	s = Scheduler()
-	print(s.render())		
+
+
+        s = Scheduler()
+        temp = s.print_jobs()
+        for inx in temp:
+                print(inx)
+
+                
 
 def print_log():
 	try:
 		f = open(LOGFILE, 'r')
 	except IOError as e:
-		print(current_time() + str(type(e)))
+		print("No log to print")
+		print("-"*40)
 		sys.exit(1)
 	else:
 		for line in f:
@@ -39,7 +48,8 @@ def get_job():
 		return {'zone':sys.argv[2], 'month':sys.argv[3], 'day':sys.argv[4], 'hour':sys.argv[5], 'minute':sys.argv[6]}
 			
 	else:
-		print("missing argument - ZONE MONTH DAY HOUR MINUTE")
+		print("invalid command - ZONE MONTH DAY HOUR MINUTE")
+		print("-"*40)
 		sys.exit(1)
 
 def commit_job():
@@ -54,17 +64,32 @@ if __name__ == "__main__":
 
 	command = sys.argv[1]
 	if command == 'set':
+                print("-"*40)
 		commit_job()
+		print("-"*40)
 	elif command == 'delete':
+                print("-"*40)
 		print("Deleting all jobs")
-		delete_crontab()
+		delete_file(PATH_CRON)
+		print("-"*40)
 	elif command == 'print':
+		print("-"*40)
 		print_jobs()
-	elif command == 'log':
-		print_log()
-	else:
-		print("Command not found")
+		print("-"*40)
 
+	elif command == 'log':
+                print("-"*40)
+		print_log()
+		print("-"*40)
+	elif command == 'clearlog':
+                print("-"*40)
+                print("Clearing Log")
+		delete_file(LOGFILE)
+		print("-"*40)
+	else:
+                print("-"*40)
+		print("Command not found")
+                print("-"*40)
 
 
 
